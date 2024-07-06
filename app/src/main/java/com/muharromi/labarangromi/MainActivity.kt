@@ -20,6 +20,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import android.widget.Button
 import android.widget.EditText
+import android.content.Intent
+import com.google.gson.Gson
+import android.app.Activity
+
 
 
 
@@ -29,6 +33,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var editTextKodeBarang: EditText
     private lateinit var editTextJumlahTambahan: EditText
     private lateinit var buttonIncreaseQuantity: Button
+    private lateinit var buttonScanQRCode: Button
     private lateinit var barangAdapter: BarangAdapter
     private var barangList: MutableList<Barang> = mutableListOf()
 
@@ -40,6 +45,7 @@ class MainActivity : AppCompatActivity() {
         editTextKodeBarang = findViewById(R.id.editTextKodeBarang)
         editTextJumlahTambahan = findViewById(R.id.editTextJumlahTambahan)
         buttonIncreaseQuantity = findViewById(R.id.buttonIncreaseQuantity)
+        buttonScanQRCode = findViewById(R.id.buttonScanQRCode)
 
         recyclerView.layoutManager = LinearLayoutManager(this)
         barangAdapter = BarangAdapter(barangList)
@@ -98,5 +104,33 @@ class MainActivity : AppCompatActivity() {
                 }
             })
         }
+
+        // Memulai pemindaian QR code
+        buttonScanQRCode.setOnClickListener {
+            val intent = Intent(this, ScanQRCodeActivity::class.java)
+            startActivityForResult(intent, REQUEST_CODE_SCAN_QR)
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == REQUEST_CODE_SCAN_QR && resultCode == Activity.RESULT_OK) {
+            val scannedData = data?.getStringExtra("scannedData") ?: return
+            try {
+                // Parse data JSON dari QR code
+                val json = Gson().fromJson(scannedData, QRCodeData::class.java)
+                editTextKodeBarang.setText(json.kode_barang)
+            } catch (e: Exception) {
+                Toast.makeText(this, "Data QR code tidak valid", Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+    companion object {
+        private const val REQUEST_CODE_SCAN_QR = 1001
     }
 }
+
+data class QRCodeData(
+    val kode_barang: String
+)
