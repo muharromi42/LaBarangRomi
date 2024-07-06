@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="8dp">
+
+    <TextView
+        android:id="@+id/textViewKodeBarang"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Kode Barang"/>
+
+    <TextView
+        android:id="@+id/textViewNamaBarang"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nama Barang"/>
+
+    <TextView
+        android:id="@+id/textViewJumlah"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Jumlah"/>
+</LinearLayout>
